@@ -1,9 +1,22 @@
 import React from "react";
 import ReactDOM from "react-dom";
-const App = () => {
+import { BrowserRouter } from "react-router-dom";
+import Routes from "./routes";
 
-    return <div> Hello World </div>
+import { firebase } from "./firebase";
+const App = (props) => {
+
+    return (
+
+        <BrowserRouter>
+            <Routes {...props} />
+        </BrowserRouter>
+
+    )
 }
 
+firebase.auth().onAuthStateChanged((user) => {
 
-ReactDOM.render(<App />, document.querySelector("#root"));
+    ReactDOM.render(<App user={user} />, document.querySelector("#root"));
+
+})
