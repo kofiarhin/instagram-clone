@@ -8,6 +8,8 @@ class Home extends Component {
 
     state = {
 
+        isLoading: false,
+
         formData: {
 
             email: {
@@ -111,7 +113,7 @@ class Home extends Component {
 
     renderButton = () => {
 
-        return <button type="submit" name="submit"> Sign up</button>
+        return this.state.isLoading ? <p className="loading"> .....Loading </p> : <button type="submit" name="submit"> Sign up</button>;
     }
 
     handleSubmit = (event) => {
@@ -138,6 +140,12 @@ class Home extends Component {
 
         if (checks.length < 1) {
 
+
+            this.setState({
+
+                isLoading: true
+            })
+
             firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
 
                 //store data 
@@ -151,9 +159,6 @@ class Home extends Component {
         }
     }
     render() {
-
-
-        console.log(this.props);
 
         return <div className="form-wrapper">
 

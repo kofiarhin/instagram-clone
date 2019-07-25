@@ -2,11 +2,14 @@ import React, { Component } from "react";
 import FormField from "../widgets/FormFields/formFields";
 import { Link } from "react-router-dom";
 import { firebase } from "../../firebase";
+import "./login.sass"
 
 class Login extends Component {
 
 
     state = {
+
+        loginError: "",
 
         formData: {
 
@@ -77,9 +80,31 @@ class Login extends Component {
 
             //signin user
             firebase.auth().signInWithEmailAndPassword(data.email, data.password).then(() => {
-                console.log("you are logged in");
+
+                sessionStorage.setItem("user", data.email)
+                this.props.history.push("/profile")
+            }).catch(error => {
+
+                const loginError = error.message;
+                this.setState({
+                    loginError
+                })
+            })
+        } else {
+
+            this.setState({
+
+                loginError: "Please check forms details and try again"
             })
         }
+    }
+
+
+    renderLoginError = () => {
+
+        return this.state.loginError ? <p className="error"> {this.state.loginError} </p> : null;
+
+
     }
 
     render() {
@@ -94,8 +119,9 @@ class Login extends Component {
                 <FormField formData={this.state.formData.password} id="password" change={element => this.handleChange(element)} />
 
                 {this.renderButton()}
-                <p>Dont have an  account <Link to="/">Login Here</Link></p>
+                <p>Dont have an  account <Link to="/">Signup here</Link></p>
             </form>
+            {this.renderLoginError()}
 
         </div>
     }
