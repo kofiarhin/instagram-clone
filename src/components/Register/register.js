@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import FormField from "../widgets/FormFields/formFields";
+import { Link } from "react-router-dom";
 import { firebase } from "../../firebase";
-import "./home.sass";
+
 
 class Register extends Component {
 
@@ -171,6 +172,8 @@ class Register extends Component {
                 {this.renderButton()}
 
             </form>
+
+            <p> Already have an account ? <Link to="/login"> Login Here </Link> </p>
 
         </div>
 
