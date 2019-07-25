@@ -1,5 +1,4 @@
 import React, { Component } from "react";
-import Header from "../../Header/header";
 import "normalize.css";
 import "../../base/base.sass";
 
