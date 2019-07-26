@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import FormField from "../widgets/FormFields/formFields";
 import { firebase } from "../../firebase";
-import "./home.sass";
-
+import Header from "../Header/header";
 class Register extends Component {
 
 
@@ -152,28 +151,36 @@ class Register extends Component {
     }
     render() {
 
-        return <div className="form-wrapper">
+        return (
 
-            <form onSubmit={(event) => this.handleSubmit(event)}>
+            <div>
 
-                <h1 className="form-title">Escogram</h1>
-                <p className="slug">Signup to see pictures and videos <span>from your friends</span> </p>
-                <FormField formData={this.state.formData.email} id="email" change={(element) => this.handleChange(element)} />
+                <Header />
 
-                <FormField formData={this.state.formData.name} id="name" change={(element) => this.handleChange(element)} />
+                <div className="form-wrapper">
+
+                    <form onSubmit={(event) => this.handleSubmit(event)}>
+
+                        <h1 className="form-title">Escogram</h1>
+                        <p className="slug">Signup to see pictures and videos <span>from your friends</span> </p>
+                        <FormField formData={this.state.formData.email} id="email" change={(element) => this.handleChange(element)} />
+
+                        <FormField formData={this.state.formData.name} id="name" change={(element) => this.handleChange(element)} />
 
 
-                <FormField formData={this.state.formData.username} id="username" change={(element) => this.handleChange(element)} />
+                        <FormField formData={this.state.formData.username} id="username" change={(element) => this.handleChange(element)} />
 
 
-                <FormField formData={this.state.formData.password} id="password" change={(element) => this.handleChange(element)} />
+                        <FormField formData={this.state.formData.password} id="password" change={(element) => this.handleChange(element)} />
 
-                {this.renderButton()}
+                        {this.renderButton()}
 
-            </form>
+                    </form>
 
-        </div>
+                </div>
 
+            </div>
+        )
     }
 }
 

@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import FormField from "../widgets/FormFields/formFields";
 import { Link } from "react-router-dom";
 import { firebase } from "../../firebase";
+import Header from "../Header/header";
 import "./login.sass"
 
 class Login extends Component {
@@ -82,7 +83,7 @@ class Login extends Component {
             firebase.auth().signInWithEmailAndPassword(data.email, data.password).then(() => {
 
                 sessionStorage.setItem("user", data.email)
-                this.props.history.push("/profile")
+                this.props.history.push("/")
             }).catch(error => {
 
                 const loginError = error.message;
@@ -109,21 +110,29 @@ class Login extends Component {
 
     render() {
 
-        return <div className="form-wrapper">
+        return (
+            <div>
+                <Header />
 
-            <form onSubmit={(event) => this.handleSubmit(event)}>
-                <h1 className="form-title"> Login</h1>
 
-                <FormField formData={this.state.formData.email} id="email" change={element => this.handleChange(element)} />
+                <div className="form-wrapper">
 
-                <FormField formData={this.state.formData.password} id="password" change={element => this.handleChange(element)} />
+                    <form onSubmit={(event) => this.handleSubmit(event)}>
 
-                {this.renderButton()}
-                <p>Dont have an  account <Link to="/">Signup here</Link></p>
-            </form>
-            {this.renderLoginError()}
+                        <FormField formData={this.state.formData.email} id="email" change={element => this.handleChange(element)} />
 
-        </div>
+                        <FormField formData={this.state.formData.password} id="password" change={element => this.handleChange(element)} />
+
+                        {this.renderButton()}
+                        <p>Dont have an  account <Link to="/">Signup here</Link></p>
+                    </form>
+                    {this.renderLoginError()}
+
+                </div>
+
+            </div>
+
+        )
     }
 }
 
