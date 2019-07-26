@@ -13,7 +13,8 @@ class Upload extends Component {
         progress: 0,
         fileUrl: "",
         changed: false,
-        showButton: false
+        showButton: false,
+        showProgress: false
     }
 
     renderAvatar = () => {
@@ -24,7 +25,8 @@ class Upload extends Component {
     handleUploadStart = () => {
 
         this.setState({
-            isUploading: true
+            isUploading: true,
+            showProgress: true
         })
     }
 
@@ -48,7 +50,8 @@ class Upload extends Component {
 
         this.setState({
             isUploading: false,
-            filename
+            filename,
+            showProgress: false
         });
 
         //get the file complete url
@@ -105,9 +108,11 @@ class Upload extends Component {
         return this.state.showButton ? <button className="btn btn-block" onClick={() => this.handleChange()}> Change </button> : null;
     }
 
-    renderProgress = () => {
+    showProgress = () => {
 
-        return this.state.progress > 0 ? <p className="progress"> {this.state.progress} </p> : null;
+        return this.state.showProgress ? <div className="progress" style={{
+            width: `${this.state.progress}%`
+        }}> </div> : null;
     }
     render() {
 
@@ -133,7 +138,7 @@ class Upload extends Component {
 
                 </label>
 
-                {this.renderProgress()}
+                {this.showProgress()}
                 {this.renderButton()}
             </div>
 
