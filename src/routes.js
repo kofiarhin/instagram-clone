@@ -6,6 +6,7 @@ import Login from "./components/Login/login";
 import Profile from "./components/Profile/profile";
 import Register from "./components/Register/register";
 import Logout from "./components/Logout/logout";
+import EditProfile from "./components/Profile/editProfile";
 
 const Routes = ({ user, ...rest }) => {
 
@@ -22,6 +23,7 @@ const Routes = ({ user, ...rest }) => {
                 <Route path="/logout" exact component={Logout} />
                 <Route path="/login" exact component={Login} />
                 <Route path="/profile" exact component={Profile} />
+                <Route path="/profile/edit/:id" exact component={EditProfile} />
                 <Route path="/register" exact component={Register} />
             </Switch>
         </Layout >

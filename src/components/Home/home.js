@@ -26,7 +26,6 @@ class Home extends Component {
     }
 
     renderHomepage = () => {
-
         return this.state.loggedIn ? <Posts /> : <p className="text-main text-center"> you need to <Link to="/login"> Login </Link> </p>;
     }
 

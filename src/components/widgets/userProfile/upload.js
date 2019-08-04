@@ -17,8 +17,21 @@ class Upload extends Component {
         showProgress: false
     }
 
+
+    componentWillMount() {
+
+        // console.log(this.props);
+
+        console.log(this.props)
+
+
+    }
+
     renderAvatar = () => {
-        return this.state.fileUrl ? this.state.fileUrl : avatar;
+
+
+        // check if user has uploaded an image  
+        //return this.state.fileUrl ? this.state.fileUrl : avatar;
     }
 
 
@@ -56,7 +69,6 @@ class Upload extends Component {
 
         //get the file complete url
         firebase.storage().ref("profileImages").child(filename).getDownloadURL().then(url => {
-
 
             this.setState({
                 fileUrl: url,

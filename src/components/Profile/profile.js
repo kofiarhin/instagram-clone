@@ -15,7 +15,7 @@ class Profile extends Component {
     componentWillMount() {
 
         const user = sessionStorage.getItem('user');
-
+        // console.log(user);
         if (!user) {
 
             this.props.history.push("/login")
@@ -28,16 +28,24 @@ class Profile extends Component {
 
         if (user) {
 
-            // get details of user
+
+            // console.log("passs")
+            // get details of user''=   
+
+
 
             firebase.database().ref(`users`).orderByChild("email").equalTo(user).once("value").then(snapshot => {
 
+                // console.log(snapshot);
                 snapshot.forEach((childSnapshot) => {
 
+                    // console.log(childSnapshot);
                     const data = {
                         id: childSnapshot.key,
                         ...childSnapshot.val()
                     }
+
+                    // console.log(data);
 
                     this.setState({
                         userData: data
@@ -61,11 +69,18 @@ class Profile extends Component {
             this.props.history.push("/login");
         })
     }
+
+    renderUserData = () => {
+
+        // console.log(this.state);
+        return this.state.userData ? <UserProfile userData={this.state.userData} /> : "error ";
+        // return this.state.userData.length > 0 ? <UserProfile userData={this.state.userData} /> : null;
+    }
     render() {
 
         return <div>
             <Header />
-            <UserProfile userData={this.state.userData} />
+            {this.renderUserData()}
         </div>
     }
 }
