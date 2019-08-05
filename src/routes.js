@@ -11,6 +11,7 @@ import Create from "./components/Posts/create/create";
 import Post from "./components/Posts/Post/index";
 import Users from "./components/Users/users";
 import User from "./components/Users/User/index";
+import Change from "./components/Profile/changeProfile";
 
 
 
@@ -33,6 +34,7 @@ const Routes = ({ user, ...rest }) => {
                 <Route path="/create" exact component={Create} />
                 <Route path="/logout" exact component={Logout} />
                 <Route path="/login" exact component={Login} />
+                <Route path="/profile/change" exact component={Change} />
                 <Route path="/profile" exact component={Profile} />
                 <Route path="/register" exact component={Register} />
             </Switch>

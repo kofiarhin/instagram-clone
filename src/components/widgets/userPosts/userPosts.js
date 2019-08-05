@@ -12,13 +12,15 @@ class UserPosts extends Component {
 
     componentWillMount() {
 
-        //fetch list of post by user
+        const userId = this.props.userId;
 
-        firebase.database().ref("posts").orderByChild("userId").equalTo(this.props.user).once("value").then(snapshot => {
 
-            let posts = firebaseLooper(snapshot)
+
+        firebase.database().ref("posts").orderByChild("userId").equalTo(userId).once("value").then(snapshot => {
+            const posts = firebaseLooper(snapshot);
 
             this.setState({
+
                 posts
             })
         })

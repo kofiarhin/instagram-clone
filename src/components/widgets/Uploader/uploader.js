@@ -6,13 +6,10 @@ class Uploader extends Component {
 
 
     state = {
-
-        name: "",
+        filename: "",
         isUploading: false,
         progress: 0,
-        fileUrl: '',
-
-
+        fileUrl: ""
     }
 
 
@@ -21,87 +18,107 @@ class Uploader extends Component {
         this.setState({
             isUploading: true
         })
-
     }
 
 
     handleUploadError = (error) => {
 
         this.setState({
-            isUploading: false
-        })
-        console.log(error);
+            isUploading: false,
+            progress: 0
+        });
 
+        console.log(error)
     }
 
 
     handleProgress = (progress) => {
 
-
         this.setState({
+
             progress
         })
+
     }
 
 
     handleUploadSuccess = (filename) => {
 
 
-        firebase.storage().ref("posts").child(filename).getDownloadURL().then(url => {
+        console.log(filename);
+
+        firebase.storage().ref("profileImages").child(filename).getDownloadURL().then(url => {
 
 
-            //send value back
-
-            this.props.filename(url)
-
+            this.props.change({ filename, fileUrl: url })
             this.setState({
-                fileUrl: url
-            })
-        })
 
+                filename,
+                fileUrl: url,
+                isUploading: false
+
+            });
+        })
     }
+
+
+
+
+
+
 
     renderAvatar = () => {
 
+        return this.state.fileUrl ?
 
-        return this.state.fileUrl ? <div style={{
 
-            height: "200px",
-            width: "200px",
-            margin: " 0 auto 20px",
-            backgroundImage: `url(${this.state.fileUrl})`,
-            backgroundSize: "cover",
-            backgroundPosition: "center",
-            backgroundRepeat: "no-repeat"
-        }}>  </div> : null;
+            <div className="preview" style={{
+                backgroundImage: `url(${this.state.fileUrl})`,
+                width: `450px`,
+                height: "450px",
+                maxWidth: "100%",
+                marginBottom: "1rem",
+                backgroundSize: "cover",
+                backgroundPosition: "center",
+            }}></div>
+
+            : null;
     }
 
 
-    render() {
+    renderProgress = () => {
 
-        return <div>
+        return this.state.isUploading ?
 
-            {this.renderAvatar()}
-            <div style={{
+            <div className="progress" style={{
                 width: `${this.state.progress}%`,
                 height: "30px",
                 background: 'green',
                 marginBottom: "1rem"
+            }}> </div> : null;
+
+    }
+    render() {
 
 
-            }}> </div>
+        return <div>
+
+            {this.renderAvatar()}
+            {this.renderProgress()}
+
             <FileUploader
-
                 accept="image/*"
-                name="image"
+                name="avatar"
                 randomizeFilename
-                storageRef={firebase.storage().ref('posts')}
+                storageRef={firebase.storage().ref("profileImages")}
                 onUploadStart={this.handleUploadStart}
                 onUploadError={this.handleUploadError}
                 onUploadSuccess={this.handleUploadSuccess}
-                onProgress={this.handleProgress}
-
+                onProgress={this.handleProgress} style={{
+                    marginBottom: "1rem"
+                }}
             />
+
 
 
         </div >

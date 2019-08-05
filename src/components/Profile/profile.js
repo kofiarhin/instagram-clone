@@ -1,6 +1,6 @@
 import React, { Component } from "react";
 import UserProfile from "../widgets/userProfile/userProfile";
-import { firebase } from "../../firebase";
+import { firebase, firebaseLooper } from "../../firebase";
 import Header from "../Header/header";
 import UserPost from "../widgets/userPosts/userPosts";
 
@@ -15,50 +15,27 @@ class Profile extends Component {
 
     componentWillMount() {
 
-        const user = sessionStorage.getItem('user');
-        // console.log(user);
+
+        const user = sessionStorage.getItem("user");
+
         if (!user) {
 
             this.props.history.push("/login")
-        } else {
+        }
+
+
+        firebase.database().ref("users").orderByChild("email").equalTo(user).limitToFirst(1).once("value").then(snapshot => {
+
+            const data = firebaseLooper(snapshot);
 
             this.setState({
+                userData: data[0],
                 loggedIn: true
-            })
-        }
-
-        if (user) {
-
-
-            // console.log("passs")
-            // get details of user''=   
+            });
+        })
 
 
 
-            firebase.database().ref(`users`).orderByChild("email").equalTo(user).once("value").then(snapshot => {
-
-                // console.log(snapshot);
-                snapshot.forEach((childSnapshot) => {
-
-                    // console.log(childSnapshot);
-                    const data = {
-                        id: childSnapshot.key,
-                        ...childSnapshot.val()
-                    }
-
-                    // console.log(data);
-
-                    this.setState({
-                        userData: data
-                    })
-
-                })
-            })
-            // firebase.database().ref(`users`).orderByChild("email").equalTo(user).limitToFirst(1).once("value").then(snapshot => {
-
-            //     console.log(snapshot.val());
-            // })
-        }
 
     }
 
@@ -71,20 +48,32 @@ class Profile extends Component {
         })
     }
 
-    renderUserData = () => {
+    renderProfile = () => {
 
-        // console.log(this.state);
-        return this.state.userData ? <UserProfile userData={this.state.userData} /> : "error ";
-        // return this.state.userData.length > 0 ? <UserProfile userData={this.state.userData} /> : null;
+
+        return this.state.userData ? <UserProfile userData={this.state.userData} type="feature" /> : null;
+
+
     }
 
 
+    renderUserPost = () => {
+
+
+        const userId = this.state.userData.id;
+        const userData = this.state.userData;
+        return userData && userId !== undefined ? <UserPost type="feature" userId={`${userId}`} /> : null;
+    }
+
     render() {
+
+
+        const userId = this.state.userData.id;
 
         return <div>
             <Header />
-            {this.renderUserData()}
-            <UserPost type="feature" user={sessionStorage.getItem("user")} />
+            {this.renderProfile()}
+            {this.renderUserPost()}
         </div>
     }
 }

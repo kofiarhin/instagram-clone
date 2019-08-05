@@ -18,9 +18,9 @@ const PostsTemplate = (props) => {
                 if (posts.length > 0) {
 
                     template = posts.map((current, index) => {
-                        console.log(current);
+                        // console.log(current);
                         return <Link to={`/posts/${current.id}`} style={{
-                            backgroundImage: `url(${current.file})`
+                            backgroundImage: `url(${current.file.fileUrl})`
                         }} className="post-unit"> </Link>
                     })
                 }

@@ -119,7 +119,6 @@ class Register extends Component {
         const formData = this.state.formData;
         let data = {}
         for (let key in formData) {
-
             data[key] = formData[key].value;
 
         }
@@ -134,20 +133,21 @@ class Register extends Component {
             }
         }
 
+        data['profile'] = "default.jpg";
+        // console.log(data);
+        // if (checks.length < 1) {
 
-        if (checks.length < 1) {
+        firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
 
-            firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
+            //store data 
+            firebase.database().ref("users").push(data).then(() => {
 
-                //store data 
-                firebase.database().ref("users").push(data).then(() => {
-
-                    this.props.history.push('/login');
-                })
-
-
+                this.props.history.push('/login');
             })
-        }
+
+
+        })
+        // }
     }
     render() {
 

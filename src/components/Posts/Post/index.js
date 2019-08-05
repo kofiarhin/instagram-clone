@@ -2,14 +2,15 @@ import React, { Component } from "react";
 import Header from "../../Header/header";
 import { firebase, firebaseLooper } from "../../../firebase";
 import "./post.sass";
-
+import _ from "lodash";
+import PostTemplate from "./postTemplate";
 
 class Post extends Component {
 
-
     state = {
 
-        post: []
+        post: [],
+        userData: []
     }
 
     componentWillMount() {
@@ -20,13 +21,28 @@ class Post extends Component {
 
         firebase.database().ref(`posts/${id}`).once("value").then(snapshot => {
 
-            this.setState({
+            const post = snapshot.val();
+            const userId = post.userId;
 
-                post: snapshot.val()
+            //fetch user
+            firebase.database().ref(`users/${userId}`).once("value").then(snapshot => {
+
+
+                this.setState({
+                    post,
+                    userData: snapshot.val()
+
+                })
+
             })
 
 
+
+
         })
+
+        //get user details
+
     }
 
 
@@ -65,24 +81,34 @@ class Post extends Component {
     renderPost = () => {
 
         const post = this.state.post;
-        return post ?
+        const userData = this.state.userData;
 
-            <div className="image-wrapper">
+        return _.isEmpty(post) && _.isEmpty(userData) ? null :
 
-                <div style={{
 
-                    backgroundImage: `url(${post.file})`,
-                    backgroundSize: "cover"
-                }} className="image"></div>
+            < div className="main-post-wrapper" >
+                {/* {console.log(userData.profile)} */}
+                <div className="postImage" style={{
+                    backgroundImage: `url(${post.file.fileUrl})`,
+                    width: "100%"
+                }}></div>
+                <div className="content">
 
-                <h2 className="caption"> {post.caption} </h2>
+                    <div className="face" style={{
+                        backgroundImage: `url(${userData.profile})`
+                    }}>  </div>
+                    <div className="caption"> <p>{post.caption} </p></div>
 
-                {this.renderCta(post.userId)}
-            </div>
-            : null;
+
+                </div>
+
+            </div >;
+
+
     }
 
     render() {
+
 
         return <div>
 

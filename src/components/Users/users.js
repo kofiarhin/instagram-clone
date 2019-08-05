@@ -17,16 +17,19 @@ class Users extends Component {
         firebase.database().ref("users").once("value").then(snapshot => {
 
 
-            const data = firebaseLooper(snapshot);
+            const users = firebaseLooper(snapshot);
 
-            console.log(data);
+            this.setState({
+                users
+            })
         })
     }
 
     renderUsers = () => {
 
+        const users = this.state.users;
 
-
+        return this.state.users ? <div>  <Users data={this.state.users} />  </div> : null;
     }
     render() {
 

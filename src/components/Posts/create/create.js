@@ -3,11 +3,15 @@ import Header from "../../Header/header";
 import FormField from "../../widgets/FormFields/formFields";
 import "./create.sass";
 import Uploader from "../../widgets/Uploader/uploader";
-import { firebase } from "../../../firebase";
+import { firebase, firebaseLooper } from "../../../firebase";
+import { generateDate } from "../../../config";
 class Create extends Component {
 
     state = {
 
+
+        passed: false,
+        userId: "",
         formData: {
 
             caption: {
@@ -26,9 +30,34 @@ class Create extends Component {
             },
 
             file: {
-                value: ""
+                filename: "",
+                fileUrl: ""
             }
         }
+    }
+
+
+    componentWillMount() {
+
+
+        const user = sessionStorage.getItem("user");
+
+        // fetch user id from database
+
+        firebase.database().ref("users").orderByChild("email").equalTo(user).once("value").then(snapshot => {
+
+            const data = firebaseLooper(snapshot);
+
+            const userData = data[0];
+
+            const userId = userData.id;
+
+            this.setState({
+                userId
+            })
+
+
+        })
     }
 
 
@@ -50,26 +79,11 @@ class Create extends Component {
 
     }
 
-    handleFilename = (filename) => {
-
-        const file = this.state.formData.file;
-        const formData = this.state.formData;
-        file.value = filename;
-
-
-        formData['file'] = file;
-
-        this.setState({
-            formData
-        })
-
-
-    }
 
 
     renderButton = () => {
 
-        return <button type="submit" name="submit"> Create </button >
+        return this.state.passed ? <button type="submit" name="submit"> Create </button > : null;
     }
 
 
@@ -86,15 +100,41 @@ class Create extends Component {
             data[key] = formData[key].value
         }
 
-        data["userId"] = sessionStorage.getItem("user");
+        data["userId"] = this.state.userId;
+        data["file"] = formData.file;
+        data['date'] = generateDate()
 
 
-        //submit data to firebase
+        firebase.database().ref("posts").push(data).then(() => {
 
-        firebase.database().ref('posts').push(data).then(() => {
+            this.props.history.push('/profile?success');
 
-            this.props.history.push("/profile");
+        });
+        // console.log(data);
+        //do some validation before send file
+        // //submit data to firebase
+
+        // firebase.database().ref('posts').push(data).then(() => {
+
+        //     this.props.history.push("/profile");
+        // })
+    }
+
+
+    handleFileChange = (element) => {
+
+        const formData = this.state.formData;
+        const file = formData["file"];
+        file.filename = element.filename;
+        file.fileUrl = element.fileUrl;
+        formData["file"] = file;
+
+        this.setState({
+            formData,
+            passed: true
         })
+
+
     }
 
     render() {
@@ -108,9 +148,8 @@ class Create extends Component {
 
                     <form onSubmit={(event) => this.handleSubmit(event)}>
 
-                        <Uploader filename={(filename) => this.handleFilename(filename)} />
+                        <Uploader change={(element) => this.handleFileChange(element)} />
                         <FormField formData={this.state.formData.caption} id="caption" change={(element) => this.handleChange(element)} />
-
 
                         {this.renderButton()}
 

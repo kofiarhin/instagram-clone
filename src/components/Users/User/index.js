@@ -15,6 +15,7 @@ class User extends Component {
     componentWillMount() {
 
 
+        console.log("user");
         const username = this.props.match.params.username;
 
         firebase.database().ref("users").orderByChild("username").equalTo(username).limitToFirst(1).once("value").then(snapshot => {
