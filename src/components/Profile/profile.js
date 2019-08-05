@@ -2,6 +2,7 @@ import React, { Component } from "react";
 import UserProfile from "../widgets/userProfile/userProfile";
 import { firebase } from "../../firebase";
 import Header from "../Header/header";
+import UserPost from "../widgets/userPosts/userPosts";
 
 
 class Profile extends Component {
@@ -76,11 +77,14 @@ class Profile extends Component {
         return this.state.userData ? <UserProfile userData={this.state.userData} /> : "error ";
         // return this.state.userData.length > 0 ? <UserProfile userData={this.state.userData} /> : null;
     }
+
+
     render() {
 
         return <div>
             <Header />
             {this.renderUserData()}
+            <UserPost type="feature" user={sessionStorage.getItem("user")} />
         </div>
     }
 }

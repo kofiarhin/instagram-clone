@@ -9,8 +9,9 @@ const Header = () => {
         return sessionStorage.getItem('user') ?
 
             <div className="links">
-                <Link to="/create"> Create </Link>
                 <Link to="/profile"> Profile </Link>
+                <Link to="/create"> Create </Link>
+                <Link to="/users"> Users </Link>
                 <Link to="/logout"> Logout </Link>
             </div>
 

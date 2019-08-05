@@ -7,6 +7,12 @@ import Profile from "./components/Profile/profile";
 import Register from "./components/Register/register";
 import Logout from "./components/Logout/logout";
 import EditProfile from "./components/Profile/editProfile";
+import Create from "./components/Posts/create/create";
+import Post from "./components/Posts/Post/index";
+import Users from "./components/Users/users";
+import User from "./components/Users/User/index";
+
+
 
 const Routes = ({ user, ...rest }) => {
 
@@ -20,10 +26,14 @@ const Routes = ({ user, ...rest }) => {
                 {/* <Route path="/" exact component={Home} user={props.user} /> */}
 
                 <Route path="/" exact component={Home} />
+                <Route path="/posts/:id" exact component={Post} />
+                <Route path="/users/:username" exact component={User} />
+                <Route path="/users" exact component={Users} />
+                <Route path="/profile/edit/:id" exact component={EditProfile} />
+                <Route path="/create" exact component={Create} />
                 <Route path="/logout" exact component={Logout} />
                 <Route path="/login" exact component={Login} />
                 <Route path="/profile" exact component={Profile} />
-                <Route path="/profile/edit/:id" exact component={EditProfile} />
                 <Route path="/register" exact component={Register} />
             </Switch>
         </Layout >

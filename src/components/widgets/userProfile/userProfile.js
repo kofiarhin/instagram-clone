@@ -37,7 +37,7 @@ class UserProfile extends Component {
                     backgroundSize: "cover",
                     backgroundPosition: "center"
                 }}> </div>
-                <button> Change  </button>
+
 
 
             </div>

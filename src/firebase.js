@@ -9,6 +9,22 @@ const firebaseConfig = {
     appId: "1:324128873126:web:e5aad9b7e22505cd"
 };
 // Initialize Firebase
+
+
+const firebaseLooper = (snapshot) => {
+
+    let data = [];
+    snapshot.forEach(childSnapshot => {
+
+        data.push({ id: childSnapshot.key, ...childSnapshot.val() });
+    });
+
+    return data;
+
+
+}
+
+
 firebase.initializeApp(firebaseConfig);
 const firebaseDB = firebase.database();
-export { firebase, firebaseDB }
+export { firebase, firebaseDB, firebaseLooper }

@@ -6,7 +6,10 @@ const FormFields = ({ formData, id, change }) => {
 
         const type = formData.element;
         let formTemplate = null;
+
+        // console.log(type);
         switch (type) {
+
 
             case "input":
 
@@ -16,6 +19,13 @@ const FormFields = ({ formData, id, change }) => {
 
                     </div>
                 )
+                break;
+
+            case "textarea":
+
+                formTemplate = <div className="from-element">
+                    <textarea value={formData.value} onChange={(event) => change({ event, id, blur: false })} />
+                </div>
                 break;
             default:
                 formTemplate = null;
