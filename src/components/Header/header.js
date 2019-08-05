@@ -1,10 +1,29 @@
-import React from "react";
+import React, { Component } from "react";
+import { firebase } from "../../firebase";
 import { Link } from "react-router-dom";
 import "./header.sass"
 
-const Header = () => {
+class Header extends Component {
 
-    const renderLinks = () => {
+
+    state = {
+
+        user: []
+    }
+
+    componentWillMount() {
+
+        firebase.database().ref(`users/${sessionStorage.getItem("userId")}`).once("value").then(snapshot => {
+
+            this.setState({
+
+                user: snapshot.vlaa
+            })
+        })
+
+    }
+
+    renderLinks = () => {
 
         return sessionStorage.getItem('user') ?
 
@@ -23,7 +42,9 @@ const Header = () => {
 
 
     }
-    const renderHeader = () => {
+
+
+    renderHeader = () => {
 
 
         return (
@@ -33,7 +54,7 @@ const Header = () => {
 
                     <h1><Link to="/"> Escogram </Link></h1>
                     <nav>
-                        {renderLinks()}
+                        {this.renderLinks()}
                     </nav>
                 </div>
             </header >
@@ -41,7 +62,12 @@ const Header = () => {
         )
     }
 
-    return <div> {renderHeader()}</div>
+
+    render() {
+
+        return <div> {this.renderHeader()}</div>
+
+    }
 }
 
 export default Header;

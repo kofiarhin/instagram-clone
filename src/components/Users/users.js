@@ -1,45 +1,22 @@
-import React, { Component } from 'react';
+import React, { Component } from "react";
 import Header from "../Header/header";
+import UserList from "./userList";
+import Search from "../Search/search";
 
-import { firebase, firebaseLooper } from "../../firebase";
+
 
 class Users extends Component {
 
-    state = {
 
-        users: []
-    }
-
-
-    componentWillMount() {
-
-
-        firebase.database().ref("users").once("value").then(snapshot => {
-
-
-            const users = firebaseLooper(snapshot);
-
-            this.setState({
-                users
-            })
-        })
-    }
-
-    renderUsers = () => {
-
-        const users = this.state.users;
-
-        return this.state.users ? <div>  <Users data={this.state.users} />  </div> : null;
-    }
     render() {
 
         return <div>
             <Header />
-
-            {this.renderUsers()}
-
+            <UserList type="thumb" amount={10} start={0} />
         </div>
     }
+
+
 }
 
 export default Users;

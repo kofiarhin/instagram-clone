@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import FormField from "../widgets/FormFields/formFields";
 import { Link } from "react-router-dom";
-import { firebase } from "../../firebase";
+import { firebase, firebaseLooper } from "../../firebase";
 import Header from "../Header/header";
 import "./login.sass"
 
@@ -81,9 +81,24 @@ class Login extends Component {
 
             //signin user
             firebase.auth().signInWithEmailAndPassword(data.email, data.password).then(() => {
+                sessionStorage.setItem("user", data.email);
 
-                sessionStorage.setItem("user", data.email)
-                this.props.history.push("/")
+                //
+
+                firebase.database().ref("users").orderByChild("email").equalTo(data.email).once("value").then(snapshot => {
+
+                    const data = firebaseLooper(snapshot);
+
+                    const user = data[0];
+
+                    const userId = user.id;
+
+                    sessionStorage.setItem("userId", userId);
+
+                    this.props.history.push("/profile")
+
+                })
+                //this.props.history.push("/")
             }).catch(error => {
 
                 const loginError = error.message;
