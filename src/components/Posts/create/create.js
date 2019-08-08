@@ -12,6 +12,7 @@ class Create extends Component {
 
         passed: false,
         userId: "",
+        UserData: [],
         formData: {
 
             caption: {
@@ -53,7 +54,8 @@ class Create extends Component {
             const userId = userData.id;
 
             this.setState({
-                userId
+                userId,
+                userData
             })
 
 
@@ -102,11 +104,12 @@ class Create extends Component {
 
         data["userId"] = this.state.userId;
         data["file"] = formData.file;
-        data['date'] = generateDate()
+        data['date'] = generateDate();
+        data["user"] = this.state.userData;
 
 
+        // console.log(data);
         firebase.database().ref("posts").push(data).then(() => {
-
             this.props.history.push('/profile?success');
 
         });
@@ -138,6 +141,7 @@ class Create extends Component {
     }
 
     render() {
+
 
         return <div>
 
