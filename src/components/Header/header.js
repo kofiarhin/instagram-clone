@@ -17,7 +17,7 @@ class Header extends Component {
 
             this.setState({
 
-                user: snapshot.vlaa
+                user: snapshot.val()
             })
         })
 
@@ -52,7 +52,7 @@ class Header extends Component {
             <header className="main-header">
                 <div className="container">
 
-                    <h1><Link to="/"> Escogram </Link></h1>
+                    <h1 className="logo"><Link to="/"> Escogram </Link></h1>
                     <nav>
                         {this.renderLinks()}
                     </nav>

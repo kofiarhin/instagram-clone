@@ -1,8 +1,7 @@
 import React, { Component } from "react";
 import { Link } from "react-router-dom";
-import Posts from "../Posts/posts";
 import Header from "../Header/header";
-
+import PostList from "../Posts/postList";
 
 // display home page
 class Home extends Component {
@@ -26,7 +25,7 @@ class Home extends Component {
     }
 
     renderHomepage = () => {
-        return this.state.loggedIn ? <Posts /> : <p className="text-main text-center"> you need to <Link to="/login"> Login </Link> </p>;
+        return this.state.loggedIn ? <PostList /> : <p className="text-main text-center"> you need to <Link to="/login"> Login </Link> </p>;
     }
 
     render() {
