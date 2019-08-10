@@ -11,6 +11,7 @@ class UserList extends Component {
     state = {
 
         users: [],
+        user: [],
         start: this.props.start,
         amount: this.props.amount,
         end: this.props.start + this.props.amount
@@ -48,40 +49,106 @@ class UserList extends Component {
 
     }
 
-    handleUnfollow = (event) => {
+    handleFollow = (event) => {
 
-        const personId = event.target.value;
 
-        //unfollow user
         const user = this.state.user;
+        const userId = sessionStorage.getItem("userId");
         const following = user.following;
 
-        if (following.includes(personId)) {
+        if (!following) {
+
+            let following = [];
+
+            following.push(event.target.value);
+
+            firebase.database().ref(`users/${userId}`).update({
+                following
+            }).then(() => {
+
+                user.following = following;
+
+                this.setState({
+                    user
+                })
+            })
+
+        } else {
+
+            const personId = event.target.value;
+            let newFollowing = [];
+            if (!following.includes(personId)) {
+
+                following.push(personId);
+            }
 
 
-            const position = following.indexOf(personId);
+            user.following = following
 
-            following.pop(position);
+            firebase.database().ref(`users/${userId}`).update({
+                following
+            }).then(() => {
+
+                this.setState({
+
+                    user
+                })
+            })
+
 
         }
 
-        user.following = following;
 
 
-        //updatefiebase with new array following
 
-        firebase.database().ref(`users/${sessionStorage.getItem('userId')}`).update({
-            following
-        }).then(() => {
 
-            console.log("udate done");
+    }
 
-            this.setState({
-                user
+    handleUnfollow = (event) => {
+
+        const user = this.state.user;
+        const userId = sessionStorage.getItem("userId");
+        const personId = event.target.value;
+        const following = user.following;
+
+
+        //returns an object -- convert object to an array 
+        const followArray = Array.from(following);
+
+        //check if person id is in array
+        if (followArray.includes(personId)) {
+
+            // get the position of person id in array
+            const position = followArray.indexOf(personId);
+
+            //remove item from  array
+            followArray.splice(position, 1);
+
+            //update firebase with the change
+            firebase.database().ref(`users/${userId}`).update({
+                following: followArray
+            }).then(() => {
+
+                //fetch user again
+                firebase.database().ref(`users/${userId}`).once("value").then(snapshot => {
+
+                    const user = snapshot.val();
+
+                    return user;
+
+                }).then(result => {
+
+                    this.setState({
+                        user: result
+                    })
+                })
             })
-        })
 
-        // console.log(followingArray);
+        }
+
+
+
+
     }
 
     renderFollowButton = (personId) => {
@@ -108,53 +175,19 @@ class UserList extends Component {
 
 
 
-    handleFollow = (event) => {
 
-        const personId = event.target.value;
-        const user = this.state.user;
-        const following = user.following;
-
-        let dataToSubmit = [];
-
-        if (following) {
-
-            dataToSubmit = [...following, personId]
-        } else {
-
-            dataToSubmit.push(personId)
-
-        }
-
-        //update firebase with datatosubmit
-
-        user.following = dataToSubmit
-
-        firebase.database().ref(`users/${sessionStorage.getItem('userId')}`).update({
-
-            following: dataToSubmit
-        }).then(() => {
-
-            console.log("following user");
-
-            this.setState({
-
-                user
-            })
-
-        })
-
-
-    }
 
 
 
     renderUsers = () => {
 
         return this.state.users ? this.state.users.map((current, index) => {
-            return <div className="main-unit-wrapper">
+
+
+            return current.id !== sessionStorage.getItem("userId") ? <div className="main-unit-wrapper">
                 <UserData userData={current} type="feature" />
                 {this.renderFollowButton(current.id)}
-            </div>
+            </div> : null;
         }) : null;
     }
 
@@ -174,6 +207,8 @@ class UserList extends Component {
     }
 
     render() {
+
+        console.log(this.state);
 
         return <div>
 
