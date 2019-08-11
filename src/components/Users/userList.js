@@ -208,9 +208,9 @@ class UserList extends Component {
 
     render() {
 
-        console.log(this.state);
+        // console.log(this.state);
 
-        return <div>
+        return <div className="container">
 
             <Search change={(element) => this.handleChange(element)} />
             {this.renderUsers()}

@@ -29,44 +29,76 @@ class PostList extends Component {
 
         const postId = event.target.value;
         const userId = sessionStorage.getItem("userId");
-        firebase.database().ref(`posts/${postId}`).once("value").then(snapshot => {
+        const posts = this.state.posts;
+        const post = posts.filter((current, index) => {
+            return current.id === postId;
 
-            const likes = snapshot.val().likes;
+            // return current;
+        })[0];
 
-            if (likes) {
 
-                likes.push(userId);
-                console.log(likes);
+        const likes = post.likes;
 
-                firebase.database().ref(`posts/${userId}`).update({
-                    likes
-                }).then(() => {
 
-                    console.log(likes);
+        if (!likes || likes == undefined) {
 
+            let likes = [];
+            likes.push(userId);
+
+            // console.log(likes);
+            posts.forEach((current, index) => {
+
+                if (current.id === postId) {
+                    current.likes = likes;
+                    const newPosts = posts;
+
+                    //update firebase 
 
                     firebase.database().ref(`posts/${postId}`).update({
                         likes
                     }).then(() => {
 
-                        this.loadPage();
+                        // console.log("liked post");
+
+                        this.setState({
+                            posts: newPosts
+                        })
+
+                    })
+                }
+
+            })
+        } else {
+
+
+
+            if (!likes.includes(userId)) {
+
+                likes.push(userId);
+            }
+
+            //update interface and firebase
+            posts.forEach((current, index) => {
+
+                if (current.id === postId) {
+
+                    current.likes = likes
+
+                    firebase.database().ref(`posts/${postId}`).update({
+                        likes
+                    }).then(() => {
+                        this.setState({
+                            posts
+                        })
+
 
                     })
 
+                }
 
+            })
 
-                })
-            } else {
-
-                firebase.database().ref(`posts/${postId}`).update({
-                    likes: [userId]
-                }).then(() => {
-                    this.props.history.push("/");
-                })
-            }
-
-
-        })
+        }
     }
 
 
@@ -129,31 +161,44 @@ class PostList extends Component {
 
     handleUnlike = (event) => {
 
-        console.log(event.target.value)
-
         // remove id from likes
 
         const postId = event.target.value;
         const userId = sessionStorage.getItem("userId");
+        const posts = this.state.posts;
 
-        firebase.database().ref(`posts/${postId}`).once("value")
-            .then(snapshot => {
+        const postArray = posts.filter((current) => {
 
-                const likes = snapshot.val().likes;
+            return current.id === postId;
+        })
 
-                const position = likes.indexOf(userId);
 
-                likes.pop(position);
+        const post = postArray[0];
+        const likes = post.likes;
 
-                //update firebase with new liks
+        const position = likes.indexOf(userId);
+
+        likes.splice(position, 1);
+
+        postArray.forEach((current, index) => {
+
+            if (current.id === postId) {
+
+                current.likes = likes;
 
                 firebase.database().ref(`posts/${postId}`).update({
                     likes
                 }).then(() => {
 
-                    console.log("unliked")
+                    this.setState({
+                        postArray
+                    })
+
                 })
-            })
+            }
+
+        })
+
 
     }
 
@@ -177,10 +222,6 @@ class PostList extends Component {
 
 
     render() {
-
-
-
-
         return <div> {this.renderPost()} </div>
     }
 }

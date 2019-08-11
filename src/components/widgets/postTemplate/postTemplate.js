@@ -27,7 +27,7 @@ const PostTemplate = (props) => {
                         backgroundImage: `url(${fileUrl})`,
                     }}></div>
 
-                    <div className="cta-wrapper"> {renderCta()}</div>
+                    <div className="cta-wrapper"> {renderCta()} {renderLikes(post)} </div>
 
                     <div className="post-content">
                         <div className="user-face" style={{
@@ -47,34 +47,41 @@ const PostTemplate = (props) => {
         return template;
     }
 
+    const renderLikes = (post) => {
+        const likes = post.likes;
+
+        return likes ? <div className="likes"> {likes.length} </div> : null;
+        // return likes.length > 0 ? <div className="likes"> {likes.length} </div> : null;
+    }
+
     const renderCta = () => {
 
         const postData = props.postData;
-
         const likes = postData.likes;
         const postId = postData.id;
         const userId = sessionStorage.getItem("userId");
+        // console.log(likes.length);
 
         //get likes
         if (likes && likes.includes(userId)) {
 
-
             return <div> <button value={postId}
 
                 onClick={(event) => props.handleUnlike(event)}
-                className="btn btn-unlike"> Unlike </button>  </div>
+                className="btn btn-unlike"> Unlike </button> </div>
 
         } else {
 
             return <div> <button value={postId}
 
                 onClick={(event) => props.handleLike(event)}
-                className="btn btn-like"> Like </button>  </div>
+                className="btn btn-like"> Like </button></div>
 
         }
 
 
     }
+
     return <div> {renderTemplate()}</div>
 }
 export default PostTemplate;
