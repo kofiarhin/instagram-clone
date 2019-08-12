@@ -12,15 +12,85 @@ class PostList extends Component {
 
         userData: [],
         posts: [],
-        refreshCount: 0
+        refreshCount: 0,
+        commentData: {
+            postId: null,
+            comment: null
+        },
+        commentSubmitted: false
     }
 
 
     componentWillMount() {
 
         this.loadPage();
+        const userId = sessionStorage.getItem("userId");
+
+        firebase.database().ref(`users/${userId}`).once("value").then(snapshot => {
+            const userData = snapshot.val();
+            this.setState({
+                userData
+            })
+        })
+
+
 
     };
+
+    loadPage = () => {
+
+
+        const user = sessionStorage.getItem("userId");
+
+        //get list of following
+
+        firebase.database().ref(`users/${user}`).once("value").then(snapshot => {
+
+
+            const following = snapshot.val().following;
+
+            if (following) {
+
+                following.forEach((current, index) => {
+
+
+                    //get list of post by
+
+                    firebase.database().ref("posts").orderByChild("userId").equalTo(current).once("value").then(snapshot => {
+
+                        const result = firebaseLooper(snapshot);
+
+                        const posts = [...this.state.posts, ...result];
+
+                        const fileteredData = posts.sort((a, b) => {
+
+                            if (a.date > b.date) {
+
+                                return 1
+                            } else {
+
+                                return -1;
+                            }
+                        })
+
+                        this.setState({
+
+                            posts: fileteredData
+                        });
+
+
+                    });
+
+
+                });
+            }
+
+
+
+        });
+
+
+    }
 
 
     handleLike = (event) => {
@@ -102,62 +172,7 @@ class PostList extends Component {
     }
 
 
-    loadPage = () => {
 
-
-        const user = sessionStorage.getItem("userId");
-
-        //get list of following
-
-        firebase.database().ref(`users/${user}`).once("value").then(snapshot => {
-
-
-            const following = snapshot.val().following;
-
-            if (following) {
-
-                following.forEach((current, index) => {
-
-
-                    //get list of post by
-
-                    firebase.database().ref("posts").orderByChild("userId").equalTo(current).once("value").then(snapshot => {
-
-
-
-                        const result = firebaseLooper(snapshot);
-
-                        const posts = [...this.state.posts, ...result];
-
-                        const fileteredData = posts.sort((a, b) => {
-
-                            if (a.date > b.date) {
-
-                                return 1
-                            } else {
-
-                                return -1;
-                            }
-                        })
-
-                        this.setState({
-
-                            posts: fileteredData
-                        });
-
-
-                    });
-
-
-                });
-            }
-
-
-
-        });
-
-
-    }
 
     handleUnlike = (event) => {
 
@@ -202,6 +217,72 @@ class PostList extends Component {
 
     }
 
+
+
+    handleChange = ({ event, postId }) => {
+
+        const userData = this.state.userData;
+        const commentData = {
+            postId,
+            comment: event.target.value,
+            userData
+        }
+
+        this.setState({
+            commentData,
+            commentSubmitted: false
+        })
+
+    }
+
+    handleSubmit = (event) => {
+
+        event.preventDefault();
+        const posts = this.state.posts;
+        const commentData = this.state.commentData;
+
+        const commentPostId = commentData.postId;
+
+        const post = posts.find((current, index) => {
+
+            return current.id === commentPostId;
+
+        });
+
+        //get comments
+        let postComments = post.comments;
+
+        if (!postComments) {
+            postComments = [];
+        }
+
+        postComments.push(commentData);
+
+        posts.forEach((current, index) => {
+
+            if (current.id === post.id) {
+
+                post.comments = postComments;
+
+                //update firebase
+                firebase.database().ref(`posts/${current.id}`).update({
+                    comments: postComments
+                }).then(() => {
+
+                    console.log("comment added");
+                    this.setState({
+                        posts
+                    })
+
+                })
+            }
+
+        });
+
+
+    }
+
+
     renderPost = () => {
 
         const posts = this.state.posts;
@@ -210,10 +291,11 @@ class PostList extends Component {
             posts.map((current, index) => {
 
                 return <PostTemplate postData={current} type="main"
-
                     handleUnlike={(event) => this.handleUnlike(event)}
                     handleLike={(event) => this.handleLike(event)}
-
+                    handleSubmit={(event) => this.handleSubmit(event)}
+                    handleChange={(event) => this.handleChange(event)}
+                    commentSubmitted={this.state.commentSubmitted}
                 />
             })
 
@@ -221,6 +303,14 @@ class PostList extends Component {
     }
 
 
+    addComment(comments, commentData) {
+
+        if (!comments) {
+            comments = [];
+        }
+        comments.push(commentData);
+        return comments;
+    }
     render() {
         return <div> {this.renderPost()} </div>
     }

@@ -1,4 +1,6 @@
 import * as firebase from "firebase";
+
+
 const firebaseConfig = {
     apiKey: "AIzaSyAiUpSvKCH92PnpKeFq6q9tIFcnpTFI4mQ",
     authDomain: "instagram-clone-4adab.firebaseapp.com",
@@ -9,6 +11,7 @@ const firebaseConfig = {
     appId: "1:324128873126:web:e5aad9b7e22505cd"
 };
 // Initialize Firebase
+
 
 
 const firebaseLooper = (snapshot) => {

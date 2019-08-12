@@ -1,4 +1,5 @@
 import React from "react";
+import { Link } from "react-router-dom";
 import "./postTemplate.sass";
 
 const PostTemplate = (props) => {
@@ -34,10 +35,28 @@ const PostTemplate = (props) => {
                             backgroundImage: `url(${userProfilePic})`
                         }}> </div>
 
-                        <p className="caption"> {post.caption} </p>
+
                     </div>
 
-                </div>
+
+                    {/* show comments */}
+                    <div>
+
+                        {renderComments()}
+                        <p><Link to={`/posts/comments/${post.id}`}> Read More {renderCommentCount(post.comments)}</Link></p>
+                    </div>
+
+
+                    <div className="add-comment">
+                        <form onSubmit={(event => props.handleSubmit(event))}>
+                            <input name="comment" placeholder="Add Comment" onChange={(event) => props.handleChange({
+                                postId: post.id,
+                                event
+                            })} />
+                        </form>
+                    </div>
+
+                </div >
                 break;
             default:
                 template = null;
@@ -45,6 +64,49 @@ const PostTemplate = (props) => {
         }
 
         return template;
+    }
+
+    const renderCommentCount = (comments) => {
+
+        if (comments) {
+
+            return <span> ({comments.length}) </span>;
+        }
+    }
+
+    const renderComments = () => {
+
+        const { postData, commentSubmitted } = props;
+
+        const comments = postData.comments;
+
+
+        if (comments) {
+
+            let template = "";
+            template = comments.map((current, index) => {
+
+
+                if (index < 3) {
+
+                    const profileUrl = current.userData.profile;
+                    return <div className="comment" style={{
+                        display: "flex",
+                        marginBottom: "0.4rem"
+                    }}> <div className="face" style={{
+                        width: "20px",
+                        height: "20px",
+                        backgroundImage: `url(${profileUrl})`,
+                        backgroundSize: "cover",
+                        marginRight: "0.5rem",
+                        borderRadius: "50%"
+                    }}> </div> {current.comment} </div>
+
+                }
+            })
+
+            return template;
+        }
     }
 
     const renderLikes = (post) => {
