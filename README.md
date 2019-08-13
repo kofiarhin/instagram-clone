@@ -58,7 +58,7 @@ This section has moved here: https://facebook.github.io/create-react-app/docs/ma
 ### Advanced Configuration
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/advanced-configuration
-
+Also create a firebaseConfig.js file and setup firebase account with configuration
 ### Deployment
 
 This section has moved here: https://facebook.github.io/create-react-app/docs/deployment
