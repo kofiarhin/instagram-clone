@@ -15,7 +15,7 @@ const PostTemplate = (props) => {
         const post = props.postData;
         const fileUrl = post.file.fileUrl;
         const userData = props.postData.user;
-        const userId = sessionStorage.getItem("userId");
+        // const userId = sessionStorage.getItem("userId");
 
         const userProfilePic = userData.profile;
         let template = null;
@@ -76,7 +76,7 @@ const PostTemplate = (props) => {
 
     const renderComments = () => {
 
-        const { postData, commentSubmitted } = props;
+        const { postData } = props;
 
         const comments = postData.comments;
 
@@ -85,7 +85,6 @@ const PostTemplate = (props) => {
 
             let template = "";
             template = comments.map((current, index) => {
-
 
                 if (index < 3) {
 

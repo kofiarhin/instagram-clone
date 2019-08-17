@@ -45,7 +45,7 @@ class ChangeProfile extends Component {
 
         // //do some validation works
 
-        if (this.state.filename == "" || this.state.fileUrl == "") {
+        if (this.state.filename === "" || this.state.fileUrl === "") {
 
             this.setState({
 

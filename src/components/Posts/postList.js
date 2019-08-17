@@ -110,7 +110,7 @@ class PostList extends Component {
         const likes = post.likes;
 
 
-        if (!likes || likes == undefined) {
+        if (!likes || likes === undefined) {
 
             let likes = [];
             likes.push(userId);

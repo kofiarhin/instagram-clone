@@ -1,9 +1,8 @@
 import React, { Component } from "react";
 import Header from "../../Header/header";
-import { firebase, firebaseLooper } from "../../../firebase";
+import { firebase } from "../../../firebase";
 import "./post.sass";
 import _ from "lodash";
-import PostTemplate from "./postTemplate";
 
 class Post extends Component {
 

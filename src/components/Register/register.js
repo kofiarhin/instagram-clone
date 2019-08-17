@@ -127,7 +127,7 @@ class Register extends Component {
         let checks = [];
         for (let key in formData) {
 
-            if (formData[key].value == "") {
+            if (formData[key].value === "") {
 
                 checks.push(false);
             }

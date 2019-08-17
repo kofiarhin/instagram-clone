@@ -76,7 +76,7 @@ class UserList extends Component {
         } else {
 
             const personId = event.target.value;
-            let newFollowing = [];
+            // let newFollowing = [];
             if (!following.includes(personId)) {
 
                 following.push(personId);
@@ -183,7 +183,7 @@ class UserList extends Component {
 
         return this.state.users ? this.state.users.map((current, index) => {
 
-
+            // console.log(current.id)
             return current.id !== sessionStorage.getItem("userId") ? <div className="main-unit-wrapper">
                 <UserData userData={current} type="feature" />
                 {this.renderFollowButton(current.id)}

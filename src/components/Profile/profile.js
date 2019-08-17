@@ -68,7 +68,7 @@ class Profile extends Component {
     render() {
 
 
-        const userId = this.state.userData.id;
+        // const userId = this.state.userData.id;
 
         return <div>
             <Header />

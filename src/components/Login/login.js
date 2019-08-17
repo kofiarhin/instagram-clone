@@ -95,7 +95,8 @@ class Login extends Component {
 
                     sessionStorage.setItem("userId", userId);
 
-                    this.props.history.push("/profile")
+                    //redirect to home
+                    this.props.history.push("/")
 
                 })
                 //this.props.history.push("/")

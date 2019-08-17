@@ -14,28 +14,26 @@ class User extends Component {
 
     componentWillMount() {
 
+        const id = this.props.match.params.id;
 
-        const username = this.props.match.params.username;
+        //fetch data from firebase
+        firebase.database().ref(`users/${id}`).once("value").then(snapshot => {
 
-        firebase.database().ref("users").orderByChild("username").equalTo(username).limitToFirst(1).once("value").then(snapshot => {
+            // console.log(snapshot.val());
 
-            const data = firebaseLooper(snapshot);
-
-            const user = data[0];
-
-            if (user) {
-
-                this.setState({
-                    user
-                })
-            }
+            const user = snapshot.val();
+            this.setState({
+                user
+            })
         })
+
 
     }
 
 
     renderUser = () => {
 
+        console.log(this.state)
 
         return this.state.user ? <div> <UserData userData={this.state.user} /> </div> : null;
     }

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import Header from "../Header/header";
 import UserList from "./userList";
-import Search from "../Search/search";
 
 
 
