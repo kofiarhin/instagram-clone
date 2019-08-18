@@ -1,14 +1,16 @@
 import React, { Component } from "react";
-import { firebase, firebaseLooper } from "../../../firebase";
+import { firebase } from "../../../firebase";
 import Header from "../../Header/header";
 import UserData from "../../widgets/userData/userData";
+import UserPost from "../../widgets/User/userPost";
 
 
 class User extends Component {
 
     state = {
 
-        user: []
+        user: [],
+        userId: this.props.match.params.id
     }
 
 
@@ -20,10 +22,10 @@ class User extends Component {
         firebase.database().ref(`users/${id}`).once("value").then(snapshot => {
 
             // console.log(snapshot.val());
-
             const user = snapshot.val();
             this.setState({
-                user
+                user,
+                userId: id
             })
         })
 
@@ -33,9 +35,21 @@ class User extends Component {
 
     renderUser = () => {
 
-        console.log(this.state)
+        // console.log(this.state)
+        return this.state.user ?
+            <div className="container">
+                <UserData type="main" userData={this.state.user} />
+            </div> : null;
+    }
 
-        return this.state.user ? <div> <UserData userData={this.state.user} /> </div> : null;
+
+    renderUserPost = () => {
+
+        const userId = this.state.userId;
+
+        return this.state.userId ? <UserPost userId={this.state.userId} /> : null;
+
+
     }
 
 
@@ -43,12 +57,14 @@ class User extends Component {
 
     render() {
 
-
+        // console.log(this.state.user);
         return <div>
-
             <Header />
-            {this.renderUser()}
+            <div className="container">
+                {this.renderUser()}
+                {this.renderUserPost()}
 
+            </div>
         </div>
     }
 

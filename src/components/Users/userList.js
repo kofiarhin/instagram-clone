@@ -11,6 +11,7 @@ class UserList extends Component {
     state = {
 
         users: [],
+        error: "",
         user: [],
         start: this.props.start,
         amount: this.props.amount,
@@ -153,21 +154,28 @@ class UserList extends Component {
 
     renderFollowButton = (personId) => {
 
+        const userId = sessionStorage.getItem("userId");
 
         const user = this.state.user;
-        const followingArray = user.following;
-
-        if (followingArray) {
-
-            return followingArray.includes(personId) ?
-
-                <button className="cta btn btn-danger" value={personId} onClick={(event) => this.handleUnfollow(event)} > Unfollow</button> :
-                <button className="cta btn btn-follow" value={personId} onClick={(event) => this.handleFollow(event)}> Follow </button>
 
 
-        } else {
+        if (personId !== userId) {
 
-            return <button className="cta btn btn-follow" value={personId} onClick={(event) => this.handleFollow(event)}> Follow </button>
+            const followingArray = user.following;
+
+            if (followingArray) {
+
+                return followingArray.includes(personId) ?
+
+                    <button className="cta btn btn-danger" value={personId} onClick={(event) => this.handleUnfollow(event)} > Unfollow</button> :
+                    <button className="cta btn btn-follow" value={personId} onClick={(event) => this.handleFollow(event)}> Follow </button>
+
+
+            } else {
+
+                return <button className="cta btn btn-follow" value={personId} onClick={(event) => this.handleFollow(event)}> Follow </button>
+
+            }
 
         }
 
@@ -181,34 +189,79 @@ class UserList extends Component {
 
     renderUsers = () => {
 
+        // console.log("render user");
+        console.log(this.state.users);
+
         return this.state.users ? this.state.users.map((current, index) => {
 
-            // console.log(current.id)
-            return current.id !== sessionStorage.getItem("userId") ? <div className="main-unit-wrapper">
+            return <div className="main-unit-wrapper">
                 <UserData userData={current} type="feature" />
                 {this.renderFollowButton(current.id)}
-            </div> : null;
+            </div>
         }) : null;
     }
 
     handleChange = (element) => {
 
         const username = element.target.value;
+        const users = this.state.users;
 
-        firebase.database().ref(`users`).orderByChild("username").equalTo(username).once("value").then(snapshot => {
+        if (username === "") {
+
+            this.loadUsers();
+
+        } else {
+
+            const user = users.filter((current) => {
+
+                return current.username === username;
+            })
+
+            if (user.length > 0) {
+
+                this.setState({
+
+                    users: user
+                })
+            } else {
+
+                this.setState({
+
+                    error: "User not Found"
+                })
+            }
+        }
+
+
+
+
+
+        // firebase.database().ref(`users`).orderByChild("username").equalTo(username).once("value").then(snapshot => {
+
+        //     const users = firebaseLooper(snapshot);
+
+        //     this.setState({
+        //         users
+        //     })
+
+        // })
+    }
+
+    loadUsers = () => {
+
+        firebase.database().ref("users").once("value").then(snapshot => {
 
             const users = firebaseLooper(snapshot);
 
             this.setState({
                 users
             })
-
         })
     }
 
     render() {
 
-        // console.log(this.state);
+        console.log(this.state.users);
 
         return <div className="container">
 

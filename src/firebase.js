@@ -29,7 +29,15 @@ const firebaseLooper = (snapshot) => {
 
 }
 
+//get user
 
+const getUser = (id) => {
+
+    return firebase.database().ref(`users/${id}`).once("value").then(snapshot => {
+
+        return (snapshot.val());
+    })
+}
 firebase.initializeApp(firebaseConfig);
 const firebaseDB = firebase.database();
-export { firebase, firebaseDB, firebaseLooper }
+export { firebase, firebaseDB, firebaseLooper, getUser }

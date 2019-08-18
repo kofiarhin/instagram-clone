@@ -15,9 +15,12 @@ const PostTemplate = (props) => {
         const post = props.postData;
         const fileUrl = post.file.fileUrl;
         const userData = props.postData.user;
-        // const userId = sessionStorage.getItem("userId");
-
         const userProfilePic = userData.profile;
+
+        const userId = userData.id;
+
+        // console.log(userId);
+
         let template = null;
 
         switch (type) {
@@ -31,9 +34,9 @@ const PostTemplate = (props) => {
                     <div className="cta-wrapper"> {renderCta()} {renderLikes(post)} </div>
 
                     <div className="post-content">
-                        <div className="user-face" style={{
+                        <Link to={`/users/${userId}`}>  <div className="user-face" style={{
                             backgroundImage: `url(${userProfilePic})`
-                        }}> </div>
+                        }}> </div></Link>
 
 
                     </div>
@@ -43,7 +46,7 @@ const PostTemplate = (props) => {
                     <div>
 
                         {renderComments()}
-                        <p><Link to={`/posts/comments/${post.id}`}> Read More {renderCommentCount(post.comments)}</Link></p>
+                        <p style={{ marginBottom: "1rem" }}><Link to={`/posts/comments/${post.id}`}> Read More {renderCommentCount(post.comments)}</Link></p>
                     </div>
 
 
@@ -77,6 +80,8 @@ const PostTemplate = (props) => {
     const renderComments = () => {
 
         const { postData } = props;
+        const ownerId = postData.user.id;
+        const postId = postData.id;
 
         const comments = postData.comments;
 
@@ -91,20 +96,29 @@ const PostTemplate = (props) => {
                     const profileUrl = current.userData.profile;
                     return <div className="comment" style={{
                         display: "flex",
-                        marginBottom: "0.4rem"
-                    }}> <div className="face" style={{
-                        width: "20px",
-                        height: "20px",
-                        backgroundImage: `url(${profileUrl})`,
-                        backgroundSize: "cover",
-                        marginRight: "0.5rem",
-                        borderRadius: "50%"
-                    }}> </div> {current.comment} </div>
+                        marginBottom: "1rem"
+                    }}>
+
+                        <Link to={`/users/${ownerId}`}>
+                            <div className="face" style={{
+                                width: "20px",
+                                height: "20px",
+                                backgroundImage: `url(${profileUrl})`,
+                                backgroundSize: "cover",
+                                marginRight: "0.5rem",
+                                borderRadius: "50%"
+                            }}> </div>  </Link> {current.comment}</div>
+
 
                 }
             })
 
-            return template;
+            return <div>
+                <p style={{ marginBottom: "1rem" }}> <Link to={`/posts/${postId}`}>  Comments</Link> </p>
+                {template}
+
+
+            </div>;
         }
     }
 

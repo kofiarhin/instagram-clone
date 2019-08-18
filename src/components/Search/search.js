@@ -8,8 +8,9 @@ const Search = (props) => {
     return <div className="container">
 
         <div className="search-wrapper">
-
-            <input type="text" nam="search" placeholder="Search user by username" onChange={(event) => props.change(event)} />
+            <form onSubmit={(event) => props.handleSubmit(event)}>
+                <input type="text" nam="search" placeholder="Search user by username" onChange={(event) => props.change(event)} />
+            </form>
         </div>
 
 

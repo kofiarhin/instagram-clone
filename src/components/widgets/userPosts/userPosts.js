@@ -12,13 +12,11 @@ class UserPosts extends Component {
 
     componentWillMount() {
 
+        // console.log(this.props);
+
         const userId = this.props.userId;
-
-
-
         firebase.database().ref("posts").orderByChild("userId").equalTo(userId).once("value").then(snapshot => {
             const posts = firebaseLooper(snapshot);
-
             this.setState({
 
                 posts
@@ -33,7 +31,6 @@ class UserPosts extends Component {
         return this.state.posts ? <div> <PostsTemplate posts={this.state.posts} type={this.props.type} />   </div> : null;
     }
     render() {
-
 
         return <div> {this.renderPosts()}</div>
     }

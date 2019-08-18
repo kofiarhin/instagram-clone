@@ -5,12 +5,10 @@ import { Link } from "react-router-dom";
 
 const UserProfile = (props) => {
 
+    console.log(props.userData);
 
     const renderCta = () => {
-
-
         const user = sessionStorage.getItem("user");
-
         if (user) {
 
             return <div className="button-wrapper">
@@ -21,7 +19,6 @@ const UserProfile = (props) => {
     }
 
     const renderProfile = () => {
-
 
         const userData = props.userData;
         const type = props.type;
@@ -37,6 +34,7 @@ const UserProfile = (props) => {
         let template = null;
         switch (type) {
             case "feature":
+
                 template = <div className="container">
 
                     <div className="profile-wrapper">
@@ -47,11 +45,8 @@ const UserProfile = (props) => {
                             }}
                         >
 
-
-
                         </div>
                         <div className="content">
-
 
                             <p className="name"> Name: {name} </p>
                             <p className="email"> Email: {email} </p>
@@ -61,9 +56,7 @@ const UserProfile = (props) => {
                             }
                         </div>
 
-
                     </div>
-
 
                 </div>
                 break;

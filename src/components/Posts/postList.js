@@ -3,6 +3,7 @@ import { firebase, firebaseLooper } from "../../firebase";
 import PostTemplate from "../widgets/postTemplate/postTemplate";
 import { Link } from "react-router-dom";
 import { withRouter } from 'react-router';
+import "./postList.sass";
 
 
 class PostList extends Component {
@@ -312,7 +313,7 @@ class PostList extends Component {
         return comments;
     }
     render() {
-        return <div> {this.renderPost()} </div>
+        return <div className="postList-wrapper">  {this.renderPost()} </div>
     }
 }
 
