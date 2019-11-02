@@ -1,73 +1,94 @@
 import React, { Component } from "react";
-import { firebase } from "../../../firebase";
+import { firebase, firebaseLooper, getUser } from "../../../firebase";
 import Header from "../../Header/header";
-import UserData from "../../widgets/userData/userData";
-import UserPost from "../../widgets/User/userPost";
-
+import UserProfile from "../../widgets/User/userProfile";
+import "./user.sass"
 
 class User extends Component {
 
+
     state = {
 
-        user: [],
-        userId: this.props.match.params.id
+        userData: [],
+        posts: [],
+        following: false
     }
-
 
     componentWillMount() {
 
-        const id = this.props.match.params.id;
+        // console.log(this.props.match.params.id)
+        const userId = this.props.match.params.id;
+        getUser(userId).then(result => {
 
-        //fetch data from firebase
-        firebase.database().ref(`users/${id}`).once("value").then(snapshot => {
+            const userData = result
+            //get list of post
+            firebase.database().ref("posts").orderByChild("userId").equalTo(userId).once("value").then(snapshot => {
 
-            // console.log(snapshot.val());
-            const user = snapshot.val();
-            this.setState({
-                user,
-                userId: id
+                const posts = firebaseLooper(snapshot);
+                this.setState({
+                    userData,
+                    posts
+                })
+
             })
+
         })
 
 
     }
 
+    renderUserProfile = () => {
 
-    renderUser = () => {
+        const userData = this.state.userData;
 
-        // console.log(this.state)
-        return this.state.user ?
-            <div className="container">
-                <UserData type="main" userData={this.state.user} />
-            </div> : null;
+        return userData ? <UserProfile userData={userData} type="main" /> : null;
     }
 
+    showPost = () => {
 
-    renderUserPost = () => {
+        let template = null;
+        const posts = this.state.posts;
+        template = posts.map((current, index) => {
+            const fileUrl = current.file.fileUrl;
 
-        const userId = this.state.userId;
+            return <div className="thumb-unit" style={{
+                backgroundImage: `url(${fileUrl})`,
+            }}></div>
+        })
 
-        return this.state.userId ? <UserPost userId={this.state.userId} /> : null;
 
+
+
+        return template
 
     }
+    renderPosts = () => {
+
+        const posts = this.state.posts;
 
 
+        return posts ? <div className="container">
+
+
+            <div className="thumb-wrapper">{this.showPost()} </div>
+
+
+        </div> : null;
+
+    }
 
 
     render() {
 
-        // console.log(this.state.user);
+        // console.log(this.state);
+
         return <div>
             <Header />
-            <div className="container">
-                {this.renderUser()}
-                {this.renderUserPost()}
+            {this.renderUserProfile()}
+            {this.renderPosts()}
 
-            </div>
         </div>
     }
-
 }
 
 export default User;

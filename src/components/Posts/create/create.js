@@ -48,9 +48,7 @@ class Create extends Component {
         firebase.database().ref("users").orderByChild("email").equalTo(user).once("value").then(snapshot => {
 
             const data = firebaseLooper(snapshot);
-
             const userData = data[0];
-
             const userId = userData.id;
 
             this.setState({

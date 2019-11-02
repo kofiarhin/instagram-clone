@@ -1,0 +1,21 @@
+.thumb-wrapper
+    display: flex
+    flex-wrap: wrap
+    .thumb-unit
+        width: 25%
+        padding-top: 25%
+        background:
+            size: cover
+            position: center
+
+@media(max-width: 750px)
+    .thumb-wrapper
+        .thumb-unit
+            width: 50%
+            padding-top: 50%
+@media(max-width: 540px)
+    .thumb-wrapper
+        .thumb-unit
+            width: 100%
+            padding-top: 100%
+            margin-bottom: 1rem

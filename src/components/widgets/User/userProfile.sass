@@ -1,0 +1,25 @@
+.user-profile-wrapper
+    display: flex
+    align-items: center
+    margin-bottom: 1rem
+    .avatar
+        width: 200px
+        height: 200px
+        margin-right: 2rem
+        background:
+            size: cover
+            position: center
+    .content .name, .username 
+        font-size: 1.2rem
+        margin-bottom: 1rem
+    .content .name
+        text-transform:  capitalize
+
+@media(max-width: 540px)
+    .user-profile-wrapper
+        text-align: center
+        display: block
+        margin-bottom: 4rem
+        .avatar
+            margin: 0 auto 1rem
+            border-radius: 50%

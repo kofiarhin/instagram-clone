@@ -1,6 +1,7 @@
 import React, { Component } from "react";
-import { firebase } from "../../firebase";
+import { firebase, firebaseLooper } from "../../firebase";
 import { Link } from "react-router-dom";
+import FontAwesome from "react-fontawesome";
 import "./header.sass"
 
 class Header extends Component {
@@ -23,12 +24,38 @@ class Header extends Component {
 
     }
 
+
+    renderUsername = () => {
+
+        // const id = sessionStorage.getItem("userId");
+
+        // //fetch user from database
+
+        // // firebase.database().ref(`users/${id}`).once('value').then(snapshot => {
+
+        // //     const userData = snapshot.val();
+
+        // //     console.log(userData.username);
+        // // })
+        // // return "kofi arhin"
+    }
+
     renderLinks = () => {
+
+        const userData = this.state.user;
+
+        const username = userData.username;
+
+        // console.log(username);
 
         return sessionStorage.getItem('user') ?
 
             <div className="links">
-                <Link to="/profile"> Profile </Link>
+
+                {/* todo change to username */}
+                <Link to="/profile" style={{
+                    textTransform: "capitalize"
+                }}> {username} </Link>
                 <Link to="/create"> Create </Link>
                 <Link to="/users"> Users </Link>
                 <Link to="/logout"> Logout </Link>
@@ -47,19 +74,18 @@ class Header extends Component {
     renderHeader = () => {
 
 
-        return (
+        return this.state.user ? <header className="main-header">
+            <div className="container">
 
-            <header className="main-header">
-                <div className="container">
+                <h1 className="logo"><Link to="/"> Escogram </Link></h1>
 
-                    <h1 className="logo"><Link to="/"> Escogram </Link></h1>
-                    <nav>
-                        {this.renderLinks()}
-                    </nav>
-                </div>
-            </header >
+                <FontAwesome name="bars" className="menu" />
 
-        )
+                <nav>
+                    {this.renderLinks()}
+                </nav>
+            </div>
+        </header > : null;
     }
 
 

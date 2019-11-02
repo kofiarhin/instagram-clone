@@ -17,7 +17,6 @@ class Home extends Component {
     componentWillMount() {
 
         if (sessionStorage.getItem("user")) {
-
             this.setState({
                 loggedIn: true
             })

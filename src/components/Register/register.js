@@ -1,7 +1,8 @@
 import React, { Component } from "react";
 import FormField from "../widgets/FormFields/formFields";
-import { firebase } from "../../firebase";
+import { firebase, firebaseLooper } from "../../firebase";
 import Header from "../Header/header";
+import { generateDate } from "../../config";
 class Register extends Component {
 
 
@@ -128,26 +129,57 @@ class Register extends Component {
         for (let key in formData) {
 
             if (formData[key].value === "") {
-
                 checks.push(false);
             }
         }
 
         data['profile'] = "default.jpg";
+
+        data['createdOn'] = generateDate();
         // console.log(data);
         // if (checks.length < 1) {
 
         firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
-
             //store data 
             firebase.database().ref("users").push(data).then(() => {
 
-                this.props.history.push('/login');
+
+                //get last insert id and add to following so the user will follow himself
+
+                firebase.database().ref('users').orderByChild("createdOn").limitToLast(1).once("value").then(snapshot => {
+
+                    const userId = firebaseLooper(snapshot)[0].id;
+
+                    //update the following of user
+                    let following = [];
+
+                    following.push(userId)
+
+                    firebase.database().ref(`users/${userId}`).update({
+
+                        following
+                    }).then(() => {
+
+                        console.log("following updated");
+                        this.props.history.push('/login');
+
+                    })
+                })
+
+                // return;
             })
 
 
         })
         // }
+    }
+
+
+
+    genDate = () => {
+
+
+
     }
     render() {
 

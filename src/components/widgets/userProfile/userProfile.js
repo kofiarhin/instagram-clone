@@ -5,7 +5,7 @@ import { Link } from "react-router-dom";
 
 const UserProfile = (props) => {
 
-    console.log(props.userData);
+    // console.log(props.userData);
 
     const renderCta = () => {
         const user = sessionStorage.getItem("user");

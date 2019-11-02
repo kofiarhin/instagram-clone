@@ -140,7 +140,7 @@ class Login extends Component {
                         <FormField formData={this.state.formData.password} id="password" change={element => this.handleChange(element)} />
 
                         {this.renderButton()}
-                        <p>Dont have an  account <Link to="/">Signup here</Link></p>
+                        <p>Dont have an  account <Link to="/register">Signup here</Link></p>
                     </form>
                     {this.renderLoginError()}
 

@@ -1,7 +1,6 @@
 import React, { Component } from "react";
 import { firebase, firebaseLooper } from "../../firebase";
 import PostTemplate from "../widgets/postTemplate/postTemplate";
-import { Link } from "react-router-dom";
 import { withRouter } from 'react-router';
 import "./postList.sass";
 
@@ -50,10 +49,10 @@ class PostList extends Component {
 
             const following = snapshot.val().following;
 
+
             if (following) {
 
                 following.forEach((current, index) => {
-
 
                     //get list of post by
 
@@ -300,7 +299,7 @@ class PostList extends Component {
                 />
             })
 
-            : <div> You need to <Link to="/users"> follow </Link>  someone to view pictures  </div>
+            : null;
     }
 
 

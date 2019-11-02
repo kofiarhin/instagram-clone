@@ -45,10 +45,9 @@ class Uploader extends Component {
     handleUploadSuccess = (filename) => {
 
 
-        console.log(filename);
+        // console.log(filename);
 
         firebase.storage().ref("profileImages").child(filename).getDownloadURL().then(url => {
-
 
             this.props.change({ filename, fileUrl: url })
             this.setState({

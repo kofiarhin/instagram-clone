@@ -35,7 +35,7 @@ const getUser = (id) => {
 
     return firebase.database().ref(`users/${id}`).once("value").then(snapshot => {
 
-        return (snapshot.val());
+        return ({ id, ...snapshot.val() });
     })
 }
 firebase.initializeApp(firebaseConfig);
