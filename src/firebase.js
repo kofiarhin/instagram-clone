@@ -1,14 +1,43 @@
 import * as firebase from "firebase";
+import config from "./firebaseConfig";
+
+
+
 const firebaseConfig = {
-    apiKey: "AIzaSyAiUpSvKCH92PnpKeFq6q9tIFcnpTFI4mQ",
-    authDomain: "instagram-clone-4adab.firebaseapp.com",
-    databaseURL: "https://instagram-clone-4adab.firebaseio.com",
-    projectId: "instagram-clone-4adab",
-    storageBucket: "instagram-clone-4adab.appspot.com",
-    messagingSenderId: "324128873126",
-    appId: "1:324128873126:web:e5aad9b7e22505cd"
+    apiKey: config.APIkEY,
+    authDomain: config.AUTHDOMAIN,
+    databaseURL: config.DATABASEURL,
+    projectId: config.PROJECTID,
+    storageBucket: config.STORAGEBUCKET,
+    messagingSenderId: config.MESSAGINGSENDINGID,
+    appId: config.APPID
 };
 // Initialize Firebase
+
+
+
+const firebaseLooper = (snapshot) => {
+
+    let data = [];
+    snapshot.forEach(childSnapshot => {
+
+        data.push({ id: childSnapshot.key, ...childSnapshot.val() });
+    });
+
+    return data;
+
+
+}
+
+//get user
+
+const getUser = (id) => {
+
+    return firebase.database().ref(`users/${id}`).once("value").then(snapshot => {
+
+        return ({ id, ...snapshot.val() });
+    })
+}
 firebase.initializeApp(firebaseConfig);
 const firebaseDB = firebase.database();
-export { firebase, firebaseDB }
+export { firebase, firebaseDB, firebaseLooper, getUser }

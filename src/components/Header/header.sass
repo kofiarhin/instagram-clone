@@ -1,0 +1,25 @@
+.main-header .container
+    padding: 1.4rem 0rem
+    display: flex
+    align-items: center
+    justify-content: space-between
+    margin-bottom: 2rem
+.main-header .links
+    display: flex
+    align-items: center
+    a
+        margin-left: 1rem
+.main-header .container .logo
+    font-weight: 300
+.main-header .container .menu
+    display:  none
+    font-size: 1.6rem
+    cursor: pointer
+@media(max-width: 540px)
+    .main-header 
+        .container nav
+            display: none
+    .main-header .container .logo
+        font-size: 1.5rem            
+    .main-header .container .menu
+        display: block

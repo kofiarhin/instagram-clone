@@ -1,9 +1,15 @@
 import React, { Component } from "react";
 import FormField from "../widgets/FormFields/formFields";
+<<<<<<< HEAD
 import { Link } from "react-router-dom";
 import { firebase } from "../../firebase";
 
 
+=======
+import { firebase, firebaseLooper } from "../../firebase";
+import Header from "../Header/header";
+import { generateDate } from "../../config";
+>>>>>>> 2def20be75287e552787ec43aea520903ebbb0d3
 class Register extends Component {
 
 
@@ -121,7 +127,6 @@ class Register extends Component {
         const formData = this.state.formData;
         let data = {}
         for (let key in formData) {
-
             data[key] = formData[key].value;
 
         }
@@ -130,53 +135,97 @@ class Register extends Component {
         let checks = [];
         for (let key in formData) {
 
-            if (formData[key].value == "") {
-
+            if (formData[key].value === "") {
                 checks.push(false);
             }
         }
 
+        data['profile'] = "default.jpg";
 
-        if (checks.length < 1) {
+        data['createdOn'] = generateDate();
+        // console.log(data);
+        // if (checks.length < 1) {
 
-            firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
+        firebase.auth().createUserWithEmailAndPassword(data.email, data.password).then(() => {
+            //store data 
+            firebase.database().ref("users").push(data).then(() => {
 
-                //store data 
-                firebase.database().ref("users").push(data).then(() => {
 
-                    this.props.history.push('/login');
+                //get last insert id and add to following so the user will follow himself
+
+                firebase.database().ref('users').orderByChild("createdOn").limitToLast(1).once("value").then(snapshot => {
+
+                    const userId = firebaseLooper(snapshot)[0].id;
+
+                    //update the following of user
+                    let following = [];
+
+                    following.push(userId)
+
+                    firebase.database().ref(`users/${userId}`).update({
+
+                        following
+                    }).then(() => {
+
+                        console.log("following updated");
+                        this.props.history.push('/login');
+
+                    })
                 })
 
-
+                // return;
             })
-        }
+
+
+        })
+        // }
+    }
+
+
+
+    genDate = () => {
+
+
+
     }
     render() {
 
-        return <div className="form-wrapper">
+        return (
 
-            <form onSubmit={(event) => this.handleSubmit(event)}>
+            <div>
 
-                <h1 className="form-title">Escogram</h1>
-                <p className="slug">Signup to see pictures and videos <span>from your friends</span> </p>
-                <FormField formData={this.state.formData.email} id="email" change={(element) => this.handleChange(element)} />
+                <Header />
 
-                <FormField formData={this.state.formData.name} id="name" change={(element) => this.handleChange(element)} />
+                <div className="form-wrapper">
+
+                    <form onSubmit={(event) => this.handleSubmit(event)}>
+
+                        <h1 className="form-title">Escogram</h1>
+                        <p className="slug">Signup to see pictures and videos <span>from your friends</span> </p>
+                        <FormField formData={this.state.formData.email} id="email" change={(element) => this.handleChange(element)} />
+
+                        <FormField formData={this.state.formData.name} id="name" change={(element) => this.handleChange(element)} />
 
 
-                <FormField formData={this.state.formData.username} id="username" change={(element) => this.handleChange(element)} />
+                        <FormField formData={this.state.formData.username} id="username" change={(element) => this.handleChange(element)} />
 
 
-                <FormField formData={this.state.formData.password} id="password" change={(element) => this.handleChange(element)} />
+                        <FormField formData={this.state.formData.password} id="password" change={(element) => this.handleChange(element)} />
 
-                {this.renderButton()}
+                        {this.renderButton()}
 
-            </form>
+                    </form>
 
+<<<<<<< HEAD
             <p> Already have an account ? <Link to="/login"> Login Here </Link> </p>
 
         </div>
+=======
+                </div>
+>>>>>>> 2def20be75287e552787ec43aea520903ebbb0d3
 
+            </div>
+        )
     }
 }
 
